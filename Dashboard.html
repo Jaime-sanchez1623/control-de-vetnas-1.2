@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 p-4 text-white flex justify-between">
+        <h1 class="text-xl font-bold">Panel de Ventas</h1>
+        <button id="logout-button" class="bg-red-500 px-4 py-2 rounded">Cerrar Sesión</button>
+    </nav>
+    
+    <div class="container mx-auto mt-6 p-4">
+        <h2 class="text-2xl font-bold mb-4">Resumen de Ventas</h2>
+        <canvas id="salesChart"></canvas>
+    </div>
+    
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>
