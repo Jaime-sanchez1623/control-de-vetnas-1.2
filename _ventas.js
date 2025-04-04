@@ -2,7 +2,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import * as XLSX from "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
 import Chart from "https://cdn.jsdelivr.net/npm/chart.js";
 
@@ -36,16 +36,6 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById("dashboard").style.display = "none";
     }
 });
-
-function register(event) {
-    event.preventDefault();
-    const email = document.getElementById("register-email").value;
-    const password = document.getElementById("register-password").value;
-    
-    createUserWithEmailAndPassword(auth, email, password)
-        .then(() => alert("Usuario registrado exitosamente"))
-        .catch(error => alert("Error: " + error.message));
-}
 
 function login(event) {
     event.preventDefault();
@@ -97,6 +87,54 @@ async function loadVentas(filtroFecha = "") {
     updateChart(ventasData);
 }
 
+// Función para actualizar el gráfico
+function updateChart(ventasData) {
+    const ctx = document.getElementById("ventasChart").getContext("2d");
+    const fechas = ventasData.map(v => v.fecha);
+    const totales = ventasData.map(v => v.total);
+
+    if (ventasChart) ventasChart.destroy();
+    ventasChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Ventas Totales',
+                data: totales,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "#333",
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: "#666"
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: "#666"
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Eventos
 window.onload = () => loadVentas();
 document.getElementById("venta-form").addEventListener("submit", saveVenta);
@@ -104,5 +142,4 @@ document.getElementById("filter-fecha").addEventListener("change", applyFilter);
 document.getElementById("export-excel").addEventListener("click", exportToExcel);
 document.getElementById("login-form").addEventListener("submit", login);
 document.getElementById("logout-btn").addEventListener("click", logout);
-document.getElementById("register-form").addEventListener("submit", register);
 document.getElementById("menu-toggle").addEventListener("click", toggleMenu);
